@@ -31,12 +31,24 @@ const languages = [
 export default function LanguageSelectScreen() {
   const { language, setLanguage, setFirstLaunchComplete, t } = useLanguage();
   const [selectedLang, setSelectedLang] = useState<Language>(language);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleContinue = async () => {
-    await setLanguage(selectedLang);
-    await setFirstLaunchComplete();
-    router.replace('/auth/register');
+    if (isLoading) return;
+    setIsLoading(true);
+    
+    try {
+      await setLanguage(selectedLang);
+      await setFirstLaunchComplete();
+      // Small delay to ensure state is saved before navigation
+      setTimeout(() => {
+        router.replace('/auth/register');
+      }, 100);
+    } catch (error) {
+      console.log('Error saving language:', error);
+      setIsLoading(false);
+    }
   };
 
   return (

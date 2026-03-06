@@ -326,7 +326,11 @@ const storage = {
         return null;
       }
     }
-    return AsyncStorage.getItem(key);
+    try {
+      return await AsyncStorage.getItem(key);
+    } catch {
+      return null;
+    }
   },
   setItem: async (key: string, value: string): Promise<void> => {
     if (Platform.OS === 'web') {
@@ -337,7 +341,11 @@ const storage = {
       }
       return;
     }
-    return AsyncStorage.setItem(key, value);
+    try {
+      await AsyncStorage.setItem(key, value);
+    } catch {
+      // Ignore errors on native if AsyncStorage fails
+    }
   },
 };
 
@@ -371,12 +379,20 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
 
   const setLanguage = async (lang: Language) => {
     setLanguageState(lang);
-    await storage.setItem('language', lang);
+    try {
+      await storage.setItem('language', lang);
+    } catch (error) {
+      console.log('Error saving language:', error);
+    }
   };
 
   const setFirstLaunchComplete = async () => {
     setIsFirstLaunch(false);
-    await storage.setItem('hasLaunched', 'true');
+    try {
+      await storage.setItem('hasLaunched', 'true');
+    } catch (error) {
+      console.log('Error saving hasLaunched:', error);
+    }
   };
 
   const t = (key: string): string => {
