@@ -914,6 +914,7 @@ const styles = StyleSheet.create({
   footer: {
     flexDirection: 'row',
     padding: 20,
+    paddingBottom: Platform.OS === 'ios' ? 100 : 90,
     gap: 12,
     borderTopWidth: 1,
     borderTopColor: COLORS.border,
