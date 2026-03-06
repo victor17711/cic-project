@@ -1,0 +1,1634 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CIC Dental Clinic - Panou Administrare</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f7fa;
+            min-height: 100vh;
+        }
+
+        /* Login Page */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+        }
+
+        .login-box {
+            background: white;
+            padding: 48px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .login-logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .login-logo i {
+            font-size: 48px;
+            color: #2E7D32;
+            margin-bottom: 16px;
+        }
+
+        .login-logo h1 {
+            font-size: 24px;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+
+        .login-logo p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none;
+            border-color: #2E7D32;
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+        }
+
+        .btn {
+            padding: 14px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-primary {
+            background: #2E7D32;
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: #1B5E20;
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e8e8e8;
+        }
+
+        .btn-danger {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .btn-danger:hover {
+            background: #ffcdd2;
+        }
+
+        .login-hint {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #888;
+        }
+
+        /* Dashboard Layout */
+        .dashboard {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: white;
+            border-right: 1px solid #e8e8e8;
+            padding: 24px 0;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 0 24px 24px;
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .sidebar-header h2 {
+            font-size: 20px;
+            color: #2E7D32;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-header p {
+            font-size: 13px;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        .sidebar-nav {
+            padding: 16px 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            color: #555;
+            text-decoration: none;
+            border-radius: 10px;
+            margin-bottom: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            background: #f5f5f5;
+            color: #2E7D32;
+        }
+
+        .nav-item.active {
+            background: #E8F5E9;
+            color: #2E7D32;
+            font-weight: 500;
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .nav-item .badge {
+            margin-left: auto;
+            background: #FF5252;
+            color: white;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .sidebar-footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 16px 24px;
+            border-top: 1px solid #e8e8e8;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #E8F5E9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2E7D32;
+        }
+
+        .user-name {
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #c62828;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 8px 0;
+        }
+
+        .logout-btn:hover {
+            text-decoration: underline;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 260px;
+            padding: 32px;
+            min-height: 100vh;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: #666;
+            font-size: 15px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .stat-card .icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 16px;
+        }
+
+        .stat-card .icon.green { background: #E8F5E9; color: #2E7D32; }
+        .stat-card .icon.orange { background: #FFF3E0; color: #F57C00; }
+        .stat-card .icon.blue { background: #E3F2FD; color: #1976D2; }
+        .stat-card .icon.purple { background: #F3E5F5; color: #7B1FA2; }
+
+        .stat-card .number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+
+        .stat-card .label {
+            color: #888;
+            font-size: 14px;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            margin-bottom: 24px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .card-header h3 {
+            font-size: 18px;
+            color: #1a1a1a;
+        }
+
+        .card-body {
+            padding: 24px;
+        }
+
+        /* Table */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th {
+            text-align: left;
+            padding: 14px 16px;
+            font-weight: 600;
+            color: #666;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .table td {
+            padding: 16px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+        }
+
+        .table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .table tr:hover {
+            background: #fafafa;
+        }
+
+        /* Status Badge */
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-badge.pending {
+            background: #FFF3E0;
+            color: #F57C00;
+        }
+
+        .status-badge.responded {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+
+        /* Action Buttons */
+        .action-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+            transition: all 0.2s;
+        }
+
+        .action-btn.view {
+            background: #E3F2FD;
+            color: #1976D2;
+        }
+
+        .action-btn.edit {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+
+        .action-btn.delete {
+            background: #FFEBEE;
+            color: #c62828;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .modal-header h3 {
+            font-size: 18px;
+        }
+
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: #f5f5f5;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .modal-body {
+            padding: 24px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            padding: 20px 24px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        /* Consultation Detail */
+        .consultation-detail {
+            background: #f9f9f9;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 12px;
+        }
+
+        .detail-label {
+            width: 140px;
+            font-weight: 500;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .detail-value {
+            flex: 1;
+            color: #1a1a1a;
+            font-size: 14px;
+        }
+
+        .consultation-images {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .consultation-images img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .medical-info {
+            background: #E8F5E9;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .medical-info h4 {
+            color: #2E7D32;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .medical-info p {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 16px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .alert.warning {
+            background: #FFF3E0;
+            color: #E65100;
+        }
+
+        .alert i {
+            font-size: 20px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-state i {
+            font-size: 64px;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            color: #999;
+            font-size: 14px;
+        }
+
+        /* Page sections */
+        .page-section {
+            display: none;
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #f0f0f0;
+            border-top-color: #2E7D32;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div class="login-container" id="loginPage">
+        <div class="login-box">
+            <div class="login-logo">
+                <i class="fas fa-tooth"></i>
+                <h1>Panou Administrare</h1>
+                <p>Clinica Dentară CIC</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Email administrator</label>
+                    <input type="email" id="loginEmail" placeholder="admin@cic.md" required>
+                </div>
+                <div class="form-group">
+                    <label>Parolă</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i> Autentificare
+                </button>
+            </form>
+            <p class="login-hint">Credențiale test: admin@cic.md / admin123</p>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="dashboard" id="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-tooth"></i> CIC Dental</h2>
+                <p>Panou Administrare</p>
+            </div>
+            <nav class="sidebar-nav">
+                <a class="nav-item active" data-page="overview">
+                    <i class="fas fa-home"></i>
+                    <span>Prezentare generală</span>
+                </a>
+                <a class="nav-item" data-page="consultations">
+                    <i class="fas fa-file-medical"></i>
+                    <span>Cereri consultație</span>
+                    <span class="badge" id="pendingBadge">0</span>
+                </a>
+                <a class="nav-item" data-page="services">
+                    <i class="fas fa-teeth"></i>
+                    <span>Servicii</span>
+                </a>
+                <a class="nav-item" data-page="doctors">
+                    <i class="fas fa-user-md"></i>
+                    <span>Medici</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div>
+                        <div class="user-name" id="adminName">Administrator</div>
+                        <div class="user-role">Admin</div>
+                    </div>
+                </div>
+                <div class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Deconectare</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Overview Page -->
+            <section class="page-section active" id="page-overview">
+                <div class="page-header">
+                    <h1>Prezentare generală</h1>
+                    <p>Bine ai venit în panoul de administrare CIC Dental Clinic</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="icon green"><i class="fas fa-file-medical"></i></div>
+                        <div class="number" id="statTotal">0</div>
+                        <div class="label">Total cereri</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="icon orange"><i class="fas fa-clock"></i></div>
+                        <div class="number" id="statPending">0</div>
+                        <div class="label">În așteptare</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="icon blue"><i class="fas fa-teeth"></i></div>
+                        <div class="number" id="statServices">0</div>
+                        <div class="label">Servicii</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="icon purple"><i class="fas fa-user-md"></i></div>
+                        <div class="number" id="statDoctors">0</div>
+                        <div class="label">Medici</div>
+                    </div>
+                </div>
+
+                <div id="pendingAlert" class="alert warning" style="display: none;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>Ai <strong id="pendingCount">0</strong> cereri de consultație în așteptare!</span>
+                    <a href="#" onclick="showPage('consultations')" style="margin-left: auto; color: #2E7D32; font-weight: 600;">Vezi acum →</a>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Ultimele cereri de consultație</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table" id="recentConsultations">
+                            <thead>
+                                <tr>
+                                    <th>Pacient</th>
+                                    <th>Problemă</th>
+                                    <th>Data</th>
+                                    <th>Status</th>
+                                    <th>Acțiuni</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Consultations Page -->
+            <section class="page-section" id="page-consultations">
+                <div class="page-header">
+                    <h1>Cereri de consultație</h1>
+                    <p>Gestionează cererile primite de la pacienți</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Toate cererile</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table" id="consultationsTable">
+                            <thead>
+                                <tr>
+                                    <th>Pacient</th>
+                                    <th>Contact</th>
+                                    <th>Problemă</th>
+                                    <th>Data</th>
+                                    <th>Status</th>
+                                    <th>Acțiuni</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Services Page -->
+            <section class="page-section" id="page-services">
+                <div class="page-header">
+                    <h1>Servicii</h1>
+                    <p>Gestionează serviciile oferite de clinică</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Lista serviciilor</h3>
+                        <button class="btn btn-primary " onclick="openServiceModal()">
+                            <i class="fas fa-plus"></i> Adaugă serviciu
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <table class="table" id="servicesTable">
+                            <thead>
+                                <tr>
+                                    <th>Serviciu</th>
+                                    <th>Descriere</th>
+                                    <th>Preț</th>
+                                    <th>Durată</th>
+                                    <th>Acțiuni</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Doctors Page -->
+            <section class="page-section" id="page-doctors">
+                <div class="page-header">
+                    <h1>Medici</h1>
+                    <p>Gestionează echipa de medici</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Echipa medicală</h3>
+                        <button class="btn btn-primary" onclick="openDoctorModal()">
+                            <i class="fas fa-plus"></i> Adaugă medic
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <table class="table" id="doctorsTable">
+                            <thead>
+                                <tr>
+                                    <th>Nume</th>
+                                    <th>Specializare</th>
+                                    <th>Experiență</th>
+                                    <th>Acțiuni</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Consultation Modal -->
+    <div class="modal-overlay" id="consultationModal">
+        <div class="modal" style="max-width: 700px;">
+            <div class="modal-header">
+                <h3>Detalii cerere consultație</h3>
+                <button class="modal-close" onclick="closeModal('consultationModal')">&times;</button>
+            </div>
+            <div class="modal-body" id="consultationModalBody">
+                <!-- Content will be loaded dynamically -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('consultationModal')">Închide</button>
+                <button class="btn btn-primary" onclick="sendReply()" id="sendReplyBtn">
+                    <i class="fas fa-paper-plane"></i> Trimite răspuns
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Service Modal -->
+    <div class="modal-overlay" id="serviceModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="serviceModalTitle">Adaugă serviciu</h3>
+                <button class="modal-close" onclick="closeModal('serviceModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="serviceForm">
+                    <input type="hidden" id="serviceId">
+                    <div class="form-group">
+                        <label>Nume serviciu *</label>
+                        <input type="text" id="serviceName" required placeholder="Ex: Detartraj și Igienizare">
+                    </div>
+                    <div class="form-group">
+                        <label>Descriere *</label>
+                        <textarea id="serviceDescription" rows="3" required placeholder="Descrierea serviciului..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Preț</label>
+                        <input type="text" id="servicePrice" placeholder="Ex: 250 RON">
+                    </div>
+                    <div class="form-group">
+                        <label>Durată</label>
+                        <input type="text" id="serviceDuration" placeholder="Ex: 45 min">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('serviceModal')">Anulează</button>
+                <button class="btn btn-primary" onclick="saveService()">Salvează</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Doctor Modal -->
+    <div class="modal-overlay" id="doctorModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="doctorModalTitle">Adaugă medic</h3>
+                <button class="modal-close" onclick="closeModal('doctorModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="doctorForm">
+                    <input type="hidden" id="doctorId">
+                    <div class="form-group">
+                        <label>Fotografie medic</label>
+                        <input type="file" id="doctorImageFile" accept="image/*" onchange="handleDoctorImage(event)">
+                        <div id="doctorImagePreview" style="margin-top: 10px;"></div>
+                        <input type="hidden" id="doctorImage">
+                    </div>
+                    <div class="form-group">
+                        <label>Nume *</label>
+                        <input type="text" id="doctorName" required placeholder="Ex: Dr. Maria Popescu">
+                    </div>
+                    <div class="form-group">
+                        <label>Specializare *</label>
+                        <input type="text" id="doctorSpecialization" required placeholder="Ex: Chirurg Dentar">
+                    </div>
+                    <div class="form-group">
+                        <label>Experiență</label>
+                        <input type="text" id="doctorExperience" placeholder="Ex: 10 ani experiență">
+                    </div>
+                    <div class="form-group">
+                        <label>Descriere</label>
+                        <textarea id="doctorDescription" rows="3" placeholder="Descrierea medicului..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Servicii atribuite</label>
+                        <div id="doctorServicesCheckboxes" style="max-height: 150px; overflow-y: auto; border: 1px solid #e0e0e0; border-radius: 8px; padding: 10px;"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('doctorModal')">Anulează</button>
+                <button class="btn btn-primary" onclick="saveDoctor()">Salvează</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = '/api';
+        let token = localStorage.getItem('admin_token');
+        let consultations = [];
+        let services = [];
+        let doctors = [];
+        let currentConsultation = null;
+
+        // Check auth on load
+        document.addEventListener('DOMContentLoaded', () => {
+            if (token) {
+                checkAuth();
+            }
+        });
+
+        async function checkAuth() {
+            try {
+                const res = await fetch(`${API_URL}/auth/me`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    const user = await res.json();
+                    if (user.is_admin) {
+                        document.getElementById('adminName').textContent = user.name;
+                        showDashboard();
+                        loadAllData();
+                    } else {
+                        logout();
+                    }
+                } else {
+                    logout();
+                }
+            } catch (e) {
+                logout();
+            }
+        }
+
+        // Login
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const res = await fetch(`${API_URL}/admin/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    token = data.token;
+                    localStorage.setItem('admin_token', token);
+                    document.getElementById('adminName').textContent = data.user.name;
+                    showDashboard();
+                    loadAllData();
+                } else {
+                    alert('Credențiale invalide!');
+                }
+            } catch (e) {
+                alert('Eroare de conectare!');
+            }
+        });
+
+        function logout() {
+            token = null;
+            localStorage.removeItem('admin_token');
+            document.getElementById('loginPage').style.display = 'flex';
+            document.getElementById('dashboard').style.display = 'none';
+        }
+
+        function showDashboard() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+        }
+
+        // Navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const page = item.dataset.page;
+                showPage(page);
+            });
+        });
+
+        function showPage(page) {
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            document.querySelector(`[data-page="${page}"]`).classList.add('active');
+            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(`page-${page}`).classList.add('active');
+        }
+
+        // Load Data
+        async function loadAllData() {
+            await Promise.all([
+                loadConsultations(),
+                loadServices(),
+                loadDoctors()
+            ]);
+            updateStats();
+        }
+
+        async function loadConsultations() {
+            try {
+                const res = await fetch(`${API_URL}/consultations`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                consultations = await res.json();
+                renderConsultations();
+                renderRecentConsultations();
+            } catch (e) {
+                console.error('Error loading consultations:', e);
+            }
+        }
+
+        async function loadServices() {
+            try {
+                const res = await fetch(`${API_URL}/services`);
+                services = await res.json();
+                renderServices();
+            } catch (e) {
+                console.error('Error loading services:', e);
+            }
+        }
+
+        async function loadDoctors() {
+            try {
+                const res = await fetch(`${API_URL}/doctors`);
+                doctors = await res.json();
+                renderDoctors();
+            } catch (e) {
+                console.error('Error loading doctors:', e);
+            }
+        }
+
+        function updateStats() {
+            const pending = consultations.filter(c => c.status === 'pending').length;
+            document.getElementById('statTotal').textContent = consultations.length;
+            document.getElementById('statPending').textContent = pending;
+            document.getElementById('statServices').textContent = services.length;
+            document.getElementById('statDoctors').textContent = doctors.length;
+            document.getElementById('pendingBadge').textContent = pending;
+            
+            if (pending > 0) {
+                document.getElementById('pendingAlert').style.display = 'flex';
+                document.getElementById('pendingCount').textContent = pending;
+            } else {
+                document.getElementById('pendingAlert').style.display = 'none';
+            }
+        }
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('ro-RO', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Render Tables
+        function renderConsultations() {
+            const tbody = document.querySelector('#consultationsTable tbody');
+            tbody.innerHTML = consultations.map(c => `
+                <tr>
+                    <td><strong>${c.name}</strong></td>
+                    <td>
+                        <div>${c.email}</div>
+                        <div style="color: #888; font-size: 12px;">${c.phone}</div>
+                    </td>
+                    <td style="max-width: 200px;">
+                        <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            ${c.problem_type || 'Nedefinit'} - ${c.description.substring(0, 50)}...
+                        </div>
+                    </td>
+                    <td>${formatDate(c.created_at)}</td>
+                    <td><span class="status-badge ${c.status}">${c.status === 'pending' ? 'În așteptare' : 'Răspuns'}</span></td>
+                    <td>
+                        <button class="action-btn view" onclick="viewConsultation('${c.id}')" title="Vezi detalii">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="action-btn delete" onclick="deleteConsultation('${c.id}')" title="Șterge">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderRecentConsultations() {
+            const tbody = document.querySelector('#recentConsultations tbody');
+            const recent = consultations.slice(0, 5);
+            tbody.innerHTML = recent.map(c => `
+                <tr>
+                    <td><strong>${c.name}</strong></td>
+                    <td>${c.problem_type || 'Consultație'}</td>
+                    <td>${formatDate(c.created_at)}</td>
+                    <td><span class="status-badge ${c.status}">${c.status === 'pending' ? 'În așteptare' : 'Răspuns'}</span></td>
+                    <td>
+                        <button class="action-btn view" onclick="viewConsultation('${c.id}')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('') || '<tr><td colspan="5" style="text-align: center; color: #888;">Nu există cereri</td></tr>';
+        }
+
+        function renderServices() {
+            const tbody = document.querySelector('#servicesTable tbody');
+            tbody.innerHTML = services.map(s => `
+                <tr>
+                    <td><strong>${s.name}</strong></td>
+                    <td style="max-width: 300px;">${s.description}</td>
+                    <td><span style="color: #2E7D32; font-weight: 600;">${s.price || '-'}</span></td>
+                    <td>${s.duration || '-'}</td>
+                    <td>
+                        <button class="action-btn edit" onclick="editService('${s.id}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn delete" onclick="deleteService('${s.id}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderDoctors() {
+            const tbody = document.querySelector('#doctorsTable tbody');
+            tbody.innerHTML = doctors.map(d => `
+                <tr>
+                    <td><strong>${d.name}</strong></td>
+                    <td>${d.specialization}</td>
+                    <td>${d.experience || '-'}</td>
+                    <td>
+                        <button class="action-btn edit" onclick="editDoctor('${d.id}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn delete" onclick="deleteDoctor('${d.id}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Consultation Modal
+        function viewConsultation(id) {
+            currentConsultation = consultations.find(c => c.id === id);
+            if (!currentConsultation) return;
+
+            const c = currentConsultation;
+            const body = document.getElementById('consultationModalBody');
+            
+            body.innerHTML = `
+                <div class="consultation-detail">
+                    <div class="detail-row">
+                        <span class="detail-label">Nume pacient:</span>
+                        <span class="detail-value">${c.name}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Email:</span>
+                        <span class="detail-value">${c.email}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Telefon:</span>
+                        <span class="detail-value">${c.phone}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Data cererii:</span>
+                        <span class="detail-value">${formatDate(c.created_at)}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Status:</span>
+                        <span class="detail-value"><span class="status-badge ${c.status}">${c.status === 'pending' ? 'În așteptare' : 'Răspuns trimis'}</span></span>
+                    </div>
+                </div>
+
+                <div class="medical-info">
+                    <h4><i class="fas fa-notes-medical"></i> Informații medicale</h4>
+                    <div class="detail-row">
+                        <span class="detail-label">Tip problemă:</span>
+                        <span class="detail-value">${c.problem_type || 'Nespecificat'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Zona afectată:</span>
+                        <span class="detail-value">${c.affected_area || 'Nespecificat'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Durată simptome:</span>
+                        <span class="detail-value">${c.symptom_duration || 'Nespecificat'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Nivel durere:</span>
+                        <span class="detail-value">${c.pain_level ? c.pain_level + '/10' : 'Nespecificat'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Alergii:</span>
+                        <span class="detail-value">${c.allergies || 'Nu sunt cunoscute'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Tratamente anterioare:</span>
+                        <span class="detail-value">${c.previous_treatments || 'Nu'}</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label><strong>Descrierea problemei:</strong></label>
+                    <p style="background: #f9f9f9; padding: 16px; border-radius: 8px; margin-top: 8px; line-height: 1.6;">
+                        ${c.description}
+                    </p>
+                </div>
+
+                ${c.images && c.images.length > 0 ? `
+                    <div class="form-group">
+                        <label><strong>Fotografii atașate (${c.images.length}):</strong></label>
+                        <div class="consultation-images">
+                            ${c.images.map(img => `<img src="${img}" onclick="window.open('${img}', '_blank')">`).join('')}
+                        </div>
+                    </div>
+                ` : ''}
+
+                ${c.response ? `
+                    <div style="background: #E8F5E9; padding: 16px; border-radius: 12px; margin-top: 16px;">
+                        <label style="color: #2E7D32; font-weight: 600;"><i class="fas fa-check-circle"></i> Răspuns trimis:</label>
+                        <p style="margin-top: 8px; line-height: 1.6;">${c.response}</p>
+                        <small style="color: #666; display: block; margin-top: 8px;">Trimis la: ${formatDate(c.response_at)}</small>
+                    </div>
+                ` : ''}
+
+                <div class="form-group" style="margin-top: 20px;">
+                    <label><strong>${c.response ? 'Modifică răspunsul:' : 'Trimite răspuns/ofertă:'}</strong></label>
+                    <textarea id="replyText" rows="4" placeholder="Mesaj principal pentru pacient...">${c.response || ''}</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label><strong>Diagnostic preliminar:</strong></label>
+                    <textarea id="replyDiagnosis" rows="2" placeholder="Diagnostic bazat pe informațiile furnizate...">${c.diagnosis || ''}</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label><strong>Tratament recomandat:</strong></label>
+                    <textarea id="replyTreatment" rows="2" placeholder="Tratamentul recomandat...">${c.recommended_treatment || ''}</textarea>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div class="form-group">
+                        <label><strong>Cost estimat:</strong></label>
+                        <input type="text" id="replyCost" placeholder="Ex: 500-800 MDL" value="${c.estimated_cost || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label><strong>Pași următori:</strong></label>
+                        <input type="text" id="replyNextSteps" placeholder="Ex: Programare consultație" value="${c.next_steps || ''}">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label><strong>Atașează fișier (opțional):</strong></label>
+                    <input type="file" id="replyFile" accept=".pdf,.doc,.docx,.jpg,.png" onchange="handleFileSelect(event)">
+                    <div id="filePreview" style="margin-top: 10px;"></div>
+                </div>
+            `;
+
+            document.getElementById('consultationModal').classList.add('active');
+        }
+
+        let selectedFile = null;
+        
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                selectedFile = {
+                    name: file.name,
+                    data: e.target.result,
+                    type: file.type
+                };
+                document.getElementById('filePreview').innerHTML = `
+                    <div style="background: #E8F5E9; padding: 10px; border-radius: 8px; display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-file" style="color: #2E7D32;"></i>
+                        <span>${file.name}</span>
+                        <button onclick="removeFile()" style="margin-left: auto; background: none; border: none; color: #c62828; cursor: pointer;">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `;
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        function removeFile() {
+            selectedFile = null;
+            document.getElementById('replyFile').value = '';
+            document.getElementById('filePreview').innerHTML = '';
+        }
+
+        async function sendReply() {
+            const replyText = document.getElementById('replyText').value.trim();
+            if (!replyText) {
+                alert('Scrie un răspuns!');
+                return;
+            }
+            
+            const replyData = {
+                response: replyText,
+                diagnosis: document.getElementById('replyDiagnosis').value.trim() || null,
+                recommended_treatment: document.getElementById('replyTreatment').value.trim() || null,
+                estimated_cost: document.getElementById('replyCost').value.trim() || null,
+                next_steps: document.getElementById('replyNextSteps').value.trim() || null,
+                attached_files: selectedFile ? [selectedFile] : []
+            };
+
+            try {
+                const res = await fetch(`${API_URL}/consultations/${currentConsultation.id}/reply`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(replyData)
+                });
+
+                if (res.ok) {
+                    alert('Răspuns trimis cu succes!');
+                    selectedFile = null;
+                    closeModal('consultationModal');
+                    loadConsultations();
+                    updateStats();
+                } else {
+                    alert('Eroare la trimitere!');
+                }
+            } catch (e) {
+                alert('Eroare de conectare!');
+            }
+        }
+
+        async function deleteConsultation(id) {
+            if (!confirm('Sigur vrei să ștergi această cerere?')) return;
+
+            try {
+                await fetch(`${API_URL}/consultations/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                loadConsultations();
+                updateStats();
+            } catch (e) {
+                alert('Eroare la ștergere!');
+            }
+        }
+
+        // Service Modal
+        function openServiceModal() {
+            document.getElementById('serviceModalTitle').textContent = 'Adaugă serviciu';
+            document.getElementById('serviceForm').reset();
+            document.getElementById('serviceId').value = '';
+            document.getElementById('serviceModal').classList.add('active');
+        }
+
+        function editService(id) {
+            const service = services.find(s => s.id === id);
+            if (!service) return;
+
+            document.getElementById('serviceModalTitle').textContent = 'Editează serviciu';
+            document.getElementById('serviceId').value = service.id;
+            document.getElementById('serviceName').value = service.name;
+            document.getElementById('serviceDescription').value = service.description;
+            document.getElementById('servicePrice').value = service.price || '';
+            document.getElementById('serviceDuration').value = service.duration || '';
+            document.getElementById('serviceModal').classList.add('active');
+        }
+
+        async function saveService() {
+            const id = document.getElementById('serviceId').value;
+            const data = {
+                name: document.getElementById('serviceName').value,
+                description: document.getElementById('serviceDescription').value,
+                price: document.getElementById('servicePrice').value,
+                duration: document.getElementById('serviceDuration').value
+            };
+
+            try {
+                const url = id ? `${API_URL}/services/${id}` : `${API_URL}/services`;
+                const method = id ? 'PUT' : 'POST';
+
+                const res = await fetch(url, {
+                    method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (res.ok) {
+                    closeModal('serviceModal');
+                    loadServices();
+                    updateStats();
+                } else {
+                    alert('Eroare la salvare!');
+                }
+            } catch (e) {
+                alert('Eroare de conectare!');
+            }
+        }
+
+        async function deleteService(id) {
+            if (!confirm('Sigur vrei să ștergi acest serviciu?')) return;
+
+            try {
+                await fetch(`${API_URL}/services/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                loadServices();
+                updateStats();
+            } catch (e) {
+                alert('Eroare la ștergere!');
+            }
+        }
+
+        // Doctor Modal
+        function openDoctorModal() {
+            document.getElementById('doctorModalTitle').textContent = 'Adaugă medic';
+            document.getElementById('doctorForm').reset();
+            document.getElementById('doctorId').value = '';
+            document.getElementById('doctorImage').value = '';
+            document.getElementById('doctorImagePreview').innerHTML = '';
+            renderDoctorServicesCheckboxes([]);
+            document.getElementById('doctorModal').classList.add('active');
+        }
+
+        function editDoctor(id) {
+            const doctor = doctors.find(d => d.id === id);
+            if (!doctor) return;
+
+            document.getElementById('doctorModalTitle').textContent = 'Editează medic';
+            document.getElementById('doctorId').value = doctor.id;
+            document.getElementById('doctorName').value = doctor.name;
+            document.getElementById('doctorSpecialization').value = doctor.specialization;
+            document.getElementById('doctorExperience').value = doctor.experience || '';
+            document.getElementById('doctorDescription').value = doctor.description || '';
+            document.getElementById('doctorImage').value = doctor.image || '';
+            
+            // Show existing image
+            if (doctor.image) {
+                document.getElementById('doctorImagePreview').innerHTML = `
+                    <img src="${doctor.image}" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover;">
+                `;
+            } else {
+                document.getElementById('doctorImagePreview').innerHTML = '';
+            }
+            
+            // Populate services checkboxes
+            renderDoctorServicesCheckboxes(doctor.service_ids || []);
+            
+            document.getElementById('doctorModal').classList.add('active');
+        }
+        
+        function renderDoctorServicesCheckboxes(selectedIds = []) {
+            const container = document.getElementById('doctorServicesCheckboxes');
+            container.innerHTML = services.map(s => `
+                <label style="display: flex; align-items: center; gap: 8px; padding: 6px 0; cursor: pointer;">
+                    <input type="checkbox" class="doctor-service-checkbox" value="${s.id}" ${selectedIds.includes(s.id) ? 'checked' : ''}>
+                    <span>${s.name}</span>
+                </label>
+            `).join('');
+        }
+        
+        function handleDoctorImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('doctorImage').value = e.target.result;
+                document.getElementById('doctorImagePreview').innerHTML = `
+                    <img src="${e.target.result}" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover;">
+                `;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function saveDoctor() {
+            const id = document.getElementById('doctorId').value;
+            
+            // Get selected service IDs
+            const selectedServices = Array.from(document.querySelectorAll('.doctor-service-checkbox:checked'))
+                .map(cb => cb.value);
+            
+            const data = {
+                name: document.getElementById('doctorName').value,
+                specialization: document.getElementById('doctorSpecialization').value,
+                experience: document.getElementById('doctorExperience').value,
+                description: document.getElementById('doctorDescription').value,
+                image: document.getElementById('doctorImage').value || null,
+                service_ids: selectedServices
+            };
+
+            try {
+                const url = id ? `${API_URL}/doctors/${id}` : `${API_URL}/doctors`;
+                const method = id ? 'PUT' : 'POST';
+
+                const res = await fetch(url, {
+                    method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (res.ok) {
+                    closeModal('doctorModal');
+                    loadDoctors();
+                    updateStats();
+                } else {
+                    alert('Eroare la salvare!');
+                }
+            } catch (e) {
+                alert('Eroare de conectare!');
+            }
+        }
+
+        async function deleteDoctor(id) {
+            if (!confirm('Sigur vrei să ștergi acest medic?')) return;
+
+            try {
+                await fetch(`${API_URL}/doctors/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                loadDoctors();
+                updateStats();
+            } catch (e) {
+                alert('Eroare la ștergere!');
+            }
+        }
+
+        // Modal helpers
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Close modal on overlay click
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
