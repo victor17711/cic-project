@@ -64,13 +64,6 @@ export default function LoginScreen() {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => router.back()}
-          >
-            <Ionicons name="arrow-back" size={24} color={COLORS.text} />
-          </TouchableOpacity>
-
           <View style={styles.header}>
             <View style={styles.logoContainer}>
               <Ionicons name="medical" size={50} color={COLORS.primary} />
@@ -151,15 +144,6 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: 24,
-  },
-  backButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 12,
-    backgroundColor: COLORS.inputBg,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 10,
   },
   header: {
     alignItems: 'center',
