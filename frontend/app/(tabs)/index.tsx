@@ -236,7 +236,7 @@ export default function HomeScreen() {
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Echipa Medicală</Text>
           </View>
-          <View style={styles.doctorsGrid}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.doctorsScroll}>
             {doctors.map((doctor) => (
               <View key={doctor.id} style={styles.doctorCard}>
                 <View style={styles.doctorImage}>
@@ -250,7 +250,7 @@ export default function HomeScreen() {
                 <Text style={styles.doctorSpec}>{doctor.specialization}</Text>
               </View>
             ))}
-          </View>
+          </ScrollView>
         </View>
 
         {/* Contact Info */}
@@ -512,20 +512,18 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
     fontWeight: '600',
   },
-  // Doctors grid
-  doctorsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    paddingHorizontal: 16,
-    justifyContent: 'space-between',
+  // Doctors carousel
+  doctorsScroll: {
+    paddingLeft: 20,
+    paddingRight: 8,
   },
   doctorCard: {
-    width: (width - 48) / 2,
+    width: 140,
     alignItems: 'center',
     backgroundColor: COLORS.cardBg,
     borderRadius: 16,
     padding: 16,
-    marginBottom: 12,
+    marginRight: 12,
     borderWidth: 1,
     borderColor: COLORS.border,
   },

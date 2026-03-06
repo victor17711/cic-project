@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from '../services/api';
 
@@ -22,6 +23,53 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Storage helper that works on both web and native
+const storage = {
+  getItem: async (key: string): Promise<string | null> => {
+    if (Platform.OS === 'web') {
+      try {
+        return localStorage.getItem(key);
+      } catch {
+        return null;
+      }
+    }
+    return AsyncStorage.getItem(key);
+  },
+  setItem: async (key: string, value: string): Promise<void> => {
+    if (Platform.OS === 'web') {
+      try {
+        localStorage.setItem(key, value);
+      } catch {
+        // Ignore errors
+      }
+      return;
+    }
+    return AsyncStorage.setItem(key, value);
+  },
+  removeItem: async (key: string): Promise<void> => {
+    if (Platform.OS === 'web') {
+      try {
+        localStorage.removeItem(key);
+      } catch {
+        // Ignore errors
+      }
+      return;
+    }
+    return AsyncStorage.removeItem(key);
+  },
+  multiRemove: async (keys: string[]): Promise<void> => {
+    if (Platform.OS === 'web') {
+      try {
+        keys.forEach(key => localStorage.removeItem(key));
+      } catch {
+        // Ignore errors
+      }
+      return;
+    }
+    return AsyncStorage.multiRemove(keys);
+  },
+};
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
@@ -33,8 +81,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const loadStoredAuth = async () => {
     try {
-      const storedToken = await AsyncStorage.getItem('token');
-      const storedUser = await AsyncStorage.getItem('user');
+      const storedToken = await storage.getItem('token');
+      const storedUser = await storage.getItem('user');
       
       if (storedToken && storedUser) {
         setToken(storedToken);
@@ -45,10 +93,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         try {
           const response = await api.get('/auth/me');
           setUser(response.data);
-          await AsyncStorage.setItem('user', JSON.stringify(response.data));
+          await storage.setItem('user', JSON.stringify(response.data));
         } catch (error) {
           // Token invalid, clear storage
-          await AsyncStorage.multiRemove(['token', 'user']);
+          await storage.multiRemove(['token', 'user']);
           setToken(null);
           setUser(null);
           delete api.defaults.headers.common['Authorization'];
@@ -71,11 +119,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
     
     try {
-      await AsyncStorage.setItem('token', newToken);
-      await AsyncStorage.setItem('user', JSON.stringify(userData));
+      await storage.setItem('token', newToken);
+      await storage.setItem('user', JSON.stringify(userData));
     } catch (e) {
-      // AsyncStorage may not work on web, continue anyway
-      console.log('AsyncStorage save error (non-critical):', e);
+      console.log('Storage save error (non-critical):', e);
     }
   };
 
@@ -89,11 +136,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
     
     try {
-      await AsyncStorage.setItem('token', newToken);
-      await AsyncStorage.setItem('user', JSON.stringify(userData));
+      await storage.setItem('token', newToken);
+      await storage.setItem('user', JSON.stringify(userData));
     } catch (e) {
-      // AsyncStorage may not work on web, continue anyway
-      console.log('AsyncStorage save error (non-critical):', e);
+      console.log('Storage save error (non-critical):', e);
     }
   };
 
@@ -101,12 +147,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setToken(null);
     setUser(null);
     delete api.defaults.headers.common['Authorization'];
-    await AsyncStorage.multiRemove(['token', 'user']);
+    await storage.multiRemove(['token', 'user']);
   };
 
-  const updateUser = (userData: User) => {
+  const updateUser = async (userData: User) => {
     setUser(userData);
-    AsyncStorage.setItem('user', JSON.stringify(userData));
+    await storage.setItem('user', JSON.stringify(userData));
   };
 
   return (
