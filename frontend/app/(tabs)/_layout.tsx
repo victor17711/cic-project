@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, StyleSheet, Platform, TouchableOpacity } from 'react-native';
-import { Tabs } from 'expo-router';
+import { View, StyleSheet, Platform, Pressable } from 'react-native';
+import { Tabs, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
 const COLORS = {
@@ -12,28 +12,35 @@ const COLORS = {
   inactive: '#9E9E9E',
 };
 
-// Custom floating center button component
-const CenterTabButton = ({ focused, onPress }: { focused: boolean; onPress: () => void }) => (
-  <TouchableOpacity 
-    style={styles.centerButtonWrapper} 
-    onPress={onPress}
-    activeOpacity={0.8}
-  >
-    <View style={styles.centerButtonOuter}>
-      <View style={[styles.centerButton, focused && styles.centerButtonActive]}>
-        <Ionicons 
-          name="leaf" 
-          size={28} 
-          color="#FFFFFF" 
-        />
-      </View>
-    </View>
-    {/* Small indicator dot below */}
-    <View style={[styles.indicatorDot, focused && styles.indicatorDotActive]} />
-  </TouchableOpacity>
-);
-
 export default function TabLayout() {
+  const router = useRouter();
+
+  // Custom tab bar button for the center (Asistent)
+  const CustomCenterButton = ({ accessibilityState }: any) => {
+    const focused = accessibilityState?.selected;
+    
+    return (
+      <Pressable
+        onPress={() => router.push('/(tabs)/assistant')}
+        style={styles.centerTabButtonContainer}
+      >
+        <View style={styles.centerButtonWrapper}>
+          <View style={styles.centerButtonOuter}>
+            <View style={[styles.centerButton, focused && styles.centerButtonActive]}>
+              <Ionicons 
+                name="chatbubbles" 
+                size={26} 
+                color="#FFFFFF" 
+              />
+            </View>
+          </View>
+          {/* Small indicator dot below */}
+          <View style={[styles.indicatorDot, focused && styles.indicatorDotActive]} />
+        </View>
+      </Pressable>
+    );
+  };
+
   return (
     <Tabs
       screenOptions={{
@@ -72,7 +79,7 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Acasă',
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color }) => (
             <Ionicons name="home-outline" size={22} color={color} />
           ),
         }}
@@ -81,7 +88,7 @@ export default function TabLayout() {
         name="services"
         options={{
           title: 'Servicii',
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color }) => (
             <Ionicons name="medical-outline" size={22} color={color} />
           ),
         }}
@@ -90,23 +97,14 @@ export default function TabLayout() {
         name="assistant"
         options={{
           title: '',
-          tabBarIcon: ({ focused }) => (
-            <CenterTabButton focused={focused} onPress={() => {}} />
-          ),
-          tabBarButton: (props) => (
-            <TouchableOpacity 
-              {...props} 
-              style={styles.centerTabButton}
-              activeOpacity={1}
-            />
-          ),
+          tabBarButton: (props) => <CustomCenterButton {...props} />,
         }}
       />
       <Tabs.Screen
         name="consultation"
         options={{
           title: 'Consultație',
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color }) => (
             <Ionicons name="bookmark-outline" size={22} color={color} />
           ),
         }}
@@ -115,7 +113,7 @@ export default function TabLayout() {
         name="profile"
         options={{
           title: 'Cont',
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color }) => (
             <Ionicons name="person-outline" size={22} color={color} />
           ),
         }}
@@ -132,22 +130,22 @@ export default function TabLayout() {
 }
 
 const styles = StyleSheet.create({
-  centerTabButton: {
+  centerTabButtonContainer: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
   },
   centerButtonWrapper: {
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
-    top: -35,
+    top: -30,
   },
   centerButtonOuter: {
-    width: 70,
-    height: 70,
-    borderRadius: 35,
-    backgroundColor: '#F0F0F0',
+    width: 68,
+    height: 68,
+    borderRadius: 34,
+    backgroundColor: '#E8F5E9',
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
@@ -157,9 +155,9 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   centerButton: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
     backgroundColor: COLORS.primary,
     justifyContent: 'center',
     alignItems: 'center',
@@ -177,7 +175,7 @@ const styles = StyleSheet.create({
     height: 6,
     borderRadius: 3,
     backgroundColor: 'transparent',
-    marginTop: 8,
+    marginTop: 6,
   },
   indicatorDotActive: {
     backgroundColor: COLORS.primary,
