@@ -203,11 +203,7 @@ export default function AssistantScreen() {
         )}
       </View>
 
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.chatContainer}
-        keyboardVerticalOffset={100}
-      >
+      <View style={styles.chatContainer}>
         <FlatList
           ref={flatListRef}
           data={messages}
@@ -231,7 +227,13 @@ export default function AssistantScreen() {
             </View>
           </View>
         )}
+      </View>
 
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.inputWrapper}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
+      >
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
@@ -260,6 +262,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.background,
+  },
+  chatContainer: {
+    flex: 1,
+    marginBottom: Platform.OS === 'ios' ? 60 : 55,
+  },
+  inputWrapper: {
+    position: 'absolute',
+    bottom: Platform.OS === 'ios' ? 90 : 75,
+    left: 0,
+    right: 0,
+    backgroundColor: COLORS.cardBg,
   },
   header: {
     flexDirection: 'row',
