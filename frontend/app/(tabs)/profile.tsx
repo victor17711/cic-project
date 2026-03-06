@@ -11,11 +11,13 @@ import {
   KeyboardAvoidingView,
   Platform,
   Linking,
+  Modal,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useAuth } from '../../src/context/AuthContext';
+import { useLanguage, Language } from '../../src/context/LanguageContext';
 import api from '../../src/services/api';
 
 const COLORS = {
@@ -32,12 +34,22 @@ const COLORS = {
 
 export default function ProfileScreen() {
   const { user, token, logout, updateUser } = useAuth();
+  const { language, setLanguage, t } = useLanguage();
   const [editing, setEditing] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showLanguageModal, setShowLanguageModal] = useState(false);
   const [form, setForm] = useState({
     name: user?.name || '',
     phone: user?.phone || '',
   });
+
+  const languages = [
+    { code: 'ro' as Language, name: 'Română', flag: '🇲🇩' },
+    { code: 'en' as Language, name: 'English', flag: '🇬🇧' },
+    { code: 'ru' as Language, name: 'Русский', flag: '🇷🇺' },
+  ];
+
+  const currentLanguage = languages.find(l => l.code === language);
 
   if (!token || !user) {
     return (
@@ -246,7 +258,7 @@ export default function ProfileScreen() {
                 <Ionicons name="document-text" size={22} color="#1976D2" />
               </View>
               <View style={styles.menuContent}>
-                <Text style={styles.menuTitle}>Istoricul cererilor</Text>
+                <Text style={styles.menuTitle}>{t('history')}</Text>
                 <Text style={styles.menuSubtitle}>Vezi toate cererile trimise</Text>
               </View>
               <Ionicons name="chevron-forward" size={22} color={COLORS.textSecondary} />
@@ -260,12 +272,70 @@ export default function ProfileScreen() {
                 <Ionicons name="notifications" size={22} color="#F57C00" />
               </View>
               <View style={styles.menuContent}>
-                <Text style={styles.menuTitle}>Notificări</Text>
+                <Text style={styles.menuTitle}>{t('notifications')}</Text>
                 <Text style={styles.menuSubtitle}>Răspunsuri la consultații</Text>
               </View>
               <Ionicons name="chevron-forward" size={22} color={COLORS.textSecondary} />
             </TouchableOpacity>
+
+            {/* Language Selector */}
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => setShowLanguageModal(true)}
+            >
+              <View style={[styles.menuIcon, { backgroundColor: '#E8F5E9' }]}>
+                <Ionicons name="language" size={22} color={COLORS.primary} />
+              </View>
+              <View style={styles.menuContent}>
+                <Text style={styles.menuTitle}>{t('language')}</Text>
+                <Text style={styles.menuSubtitle}>{currentLanguage?.flag} {currentLanguage?.name}</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={22} color={COLORS.textSecondary} />
+            </TouchableOpacity>
           </View>
+
+          {/* Language Selection Modal */}
+          <Modal
+            visible={showLanguageModal}
+            transparent
+            animationType="slide"
+            onRequestClose={() => setShowLanguageModal(false)}
+          >
+            <View style={styles.modalOverlay}>
+              <View style={styles.modalContent}>
+                <View style={styles.modalHeader}>
+                  <Text style={styles.modalTitle}>{t('selectLanguage')}</Text>
+                  <TouchableOpacity onPress={() => setShowLanguageModal(false)}>
+                    <Ionicons name="close" size={24} color={COLORS.text} />
+                  </TouchableOpacity>
+                </View>
+                {languages.map((lang) => (
+                  <TouchableOpacity
+                    key={lang.code}
+                    style={[
+                      styles.languageOption,
+                      language === lang.code && styles.languageOptionSelected,
+                    ]}
+                    onPress={() => {
+                      setLanguage(lang.code);
+                      setShowLanguageModal(false);
+                    }}
+                  >
+                    <Text style={styles.languageFlag}>{lang.flag}</Text>
+                    <Text style={[
+                      styles.languageName,
+                      language === lang.code && styles.languageNameSelected,
+                    ]}>
+                      {lang.name}
+                    </Text>
+                    {language === lang.code && (
+                      <Ionicons name="checkmark-circle" size={24} color={COLORS.primary} />
+                    )}
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+          </Modal>
 
           {user.is_admin && (
             <TouchableOpacity
@@ -568,6 +638,58 @@ const styles = StyleSheet.create({
   registerButtonText: {
     color: COLORS.primary,
     fontSize: 15,
+    fontWeight: '600',
+  },
+  // Modal styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'flex-end',
+  },
+  modalContent: {
+    backgroundColor: COLORS.background,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    paddingHorizontal: 20,
+    paddingBottom: Platform.OS === 'ios' ? 40 : 20,
+    paddingTop: 20,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: COLORS.text,
+  },
+  languageOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    marginBottom: 12,
+  },
+  languageOptionSelected: {
+    borderColor: COLORS.primary,
+    backgroundColor: '#E8F5E9',
+  },
+  languageFlag: {
+    fontSize: 28,
+    marginRight: 16,
+  },
+  languageName: {
+    flex: 1,
+    fontSize: 17,
+    fontWeight: '500',
+    color: COLORS.text,
+  },
+  languageNameSelected: {
+    color: COLORS.primary,
     fontWeight: '600',
   },
 });

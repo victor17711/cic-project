@@ -3,6 +3,7 @@ import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { AuthProvider, useAuth } from '../src/context/AuthContext';
+import { LanguageProvider, useLanguage } from '../src/context/LanguageContext';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const COLORS = {
@@ -10,28 +11,39 @@ const COLORS = {
   background: '#FFFFFF',
 };
 
-// This component handles the navigation based on auth state
+// This component handles the navigation based on auth and language state
 function RootLayoutNav() {
-  const { user, loading } = useAuth();
+  const { user, loading: authLoading } = useAuth();
+  const { isFirstLaunch, loading: langLoading } = useLanguage();
   const segments = useSegments();
   const router = useRouter();
 
   React.useEffect(() => {
-    if (loading) return;
+    if (authLoading || langLoading) return;
 
     const inAuthGroup = segments[0] === 'auth';
+    const onLanguageSelect = segments[0] === 'language-select';
 
-    if (!user && !inAuthGroup) {
-      // User is not signed in and not on auth screen, redirect to login
-      router.replace('/auth/login');
-    } else if (user && inAuthGroup) {
-      // User is signed in but on auth screen, redirect to main app
-      router.replace('/(tabs)');
+    // First launch - show language selection
+    if (isFirstLaunch && !onLanguageSelect) {
+      router.replace('/language-select');
+      return;
     }
-  }, [user, loading, segments]);
 
-  // Show loading screen while checking auth
-  if (loading) {
+    // Not first launch anymore
+    if (!isFirstLaunch) {
+      if (!user && !inAuthGroup) {
+        // User is not signed in and not on auth screen, redirect to login
+        router.replace('/auth/login');
+      } else if (user && (inAuthGroup || onLanguageSelect)) {
+        // User is signed in but on auth/language screen, redirect to main app
+        router.replace('/(tabs)');
+      }
+    }
+  }, [user, authLoading, langLoading, isFirstLaunch, segments]);
+
+  // Show loading screen while checking auth and language
+  if (authLoading || langLoading) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color={COLORS.primary} />
@@ -41,6 +53,7 @@ function RootLayoutNav() {
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="language-select" />
       <Stack.Screen name="(tabs)" />
       <Stack.Screen name="auth" />
       <Stack.Screen name="history" />
@@ -52,10 +65,12 @@ function RootLayoutNav() {
 export default function RootLayout() {
   return (
     <SafeAreaProvider>
-      <AuthProvider>
-        <StatusBar style="dark" />
-        <RootLayoutNav />
-      </AuthProvider>
+      <LanguageProvider>
+        <AuthProvider>
+          <StatusBar style="dark" />
+          <RootLayoutNav />
+        </AuthProvider>
+      </LanguageProvider>
     </SafeAreaProvider>
   );
 }
